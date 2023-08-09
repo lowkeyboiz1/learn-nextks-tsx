@@ -17,7 +17,15 @@ import { CloseCircle } from 'iconsax-react'
 
 type Anchor = 'right'
 
-function DrawerAdd({ children }: { children: React.ReactNode }) {
+function DrawerAdd({
+  children,
+  meta,
+  setMeta,
+}: {
+  children: React.ReactNode
+  meta: any
+  setMeta: any
+}) {
   const [firstName, setFirstName] = useState<string>('')
   const [lastName, setLastName] = useState<string>('')
   const [gender, setGender] = useState<string>('')
@@ -95,8 +103,22 @@ function DrawerAdd({ children }: { children: React.ReactNode }) {
       gender.length == 0 && setWarnGender(true)
       status.length == 0 && setWarnStatus(true)
     } else {
+      const newUser = {
+        id: Date.now(),
+        first_name: firstName,
+        last_name: lastName,
+        birthday,
+        homeTown,
+        phoneNumber,
+        email,
+        gender,
+        status,
+      }
       // cho nay add data
-      console.log({ firstName, lastName, birthday, homeTown, phoneNumber, email })
+      setMeta({
+        ...meta,
+        dataForm: [...meta.dataForm, newUser],
+      })
       setOpenMessage(true)
       handleClear()
     }

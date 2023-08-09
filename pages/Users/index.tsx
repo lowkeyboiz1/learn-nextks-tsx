@@ -16,6 +16,7 @@ export interface IMeta {
   page: number
   totalPage: number
   total: number
+  dataForm: any
 }
 
 function Users() {
@@ -25,6 +26,7 @@ function Users() {
     page: 1,
     totalPage: 1,
     total: 0,
+    dataForm: {},
   })
 
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -182,7 +184,7 @@ function Users() {
           <Button variant='outlined' startIcon={<Filter color='#1976d2' />}>
             Bộ lọc
           </Button>
-          <DrawerAdd>
+          <DrawerAdd meta={meta} setMeta={setMeta}>
             <Button
               variant='contained'
               startIcon={<AddIcon />}

@@ -4,13 +4,13 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 
-
 interface IUser {
   id: number
   email: string
   first_name: string
   last_name: string
   avatar: string
+  status: any
 }
 function Table({ setMeta, meta }: { setMeta: Function; meta: IMeta }) {
   const [tableData, setTableData] = useState([])
@@ -21,8 +21,7 @@ function Table({ setMeta, meta }: { setMeta: Function; meta: IMeta }) {
     try {
       const { data } = await axios.get(`https://reqres.in/api/users?page=${pageData}`)
 
-      setTableData(data.data)
-      setMeta({ ...meta, totalPage: data.total_pages })
+      setMeta({ ...meta, dataForm: data.data, totalPage: data.total_pages })
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -57,8 +56,8 @@ function Table({ setMeta, meta }: { setMeta: Function; meta: IMeta }) {
         </tr>
       </thead>
       <tbody className='w-full bg-[#ecf0f1]'>
-        {tableData?.length ? (
-          tableData.map((item: IUser) => (
+        {meta.dataForm?.length ? (
+          meta.dataForm.map((item: IUser) => (
             <tr
               key={item.id}
               className='flex items-center justify-between px-6 py-2 text-[#34495e] w-full'
@@ -73,7 +72,7 @@ function Table({ setMeta, meta }: { setMeta: Function; meta: IMeta }) {
               <td className='w-[14%]'>{item.email}</td>
               <td className='w-[14%]'>0123456789</td>
               <td className='w-[14%] text-right'>
-                <RenderStatus name={'a'} />
+                <RenderStatus status={item.status === 'onl'} name={'a'} />
               </td>
             </tr>
           ))
@@ -85,8 +84,8 @@ function Table({ setMeta, meta }: { setMeta: Function; meta: IMeta }) {
   )
 }
 
-const RenderStatus = ({ name }: { name: any }) => {
-  const [checked, setChecked] = useState(false)
+const RenderStatus = ({ name, status = false }: { name: any; status: boolean }) => {
+  const [checked, setChecked] = useState(status)
   const handleChangeChecked = () => {
     setChecked(!checked)
   }
