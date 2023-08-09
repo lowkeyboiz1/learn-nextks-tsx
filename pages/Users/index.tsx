@@ -1,70 +1,41 @@
 import React, { useRef, useState } from 'react'
-import {
-  Badge,
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  IconButton,
-  Input,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Paper,
-  Switch,
-  TableBody,
-  TableCell,
-  TablePagination,
-  TextField,
-  Tooltip,
-} from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+
+import { Box, Button, InputAdornment, Pagination, TextField } from '@mui/material'
 import CardItem from '../../components/CardItem'
 import Layout from '../../components/Layout'
 import PercentRange from '../../components/PercentRange'
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
-import { AccountCircle, Visibility, VisibilityOff } from '@mui/icons-material'
-import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import AddIcon from '@mui/icons-material/Add'
 import { Filter } from 'iconsax-react'
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import Table from '@/components/Table'
+import DrawerAdd from '@/components/DrawerAdd'
 
-interface GridSelectionModelChangeParams {
-  selectionModel: number[]
+export interface IMeta {
+  page: number
+  totalPage: number
+  total: number
 }
-
-interface Row {
-  id: number
-  lastName: string
-  firstName: string
-  age: number | null
-}
-
-const columns: GridColDef[] = [
-  // Your column definitions here...
-]
-
-const rows: Row[] = [
-  // Your row data here...
-]
 
 function Users() {
   const [searchValue, setSearchValue] = useState('')
+  const [dataFromFormInput, setDataFromFormInput] = useState({})
+  const [meta, setMeta] = useState<IMeta>({
+    page: 1,
+    totalPage: 1,
+    total: 0,
+  })
 
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const [selectionModel, setSelectionModel] = useState<number[]>([])
-
-  const handleSelectionModelChange = (params: GridSelectionModelChangeParams) => {
-    setSelectionModel(params.selectionModel)
-  }
 
   const clearSearchInput = () => {
     setSearchValue('')
     inputRef.current!.focus() // Using non-null assertion here
   }
+
+  const openModalAdd = () => {}
+
   return (
     <Layout>
       <div className='text-[32px] font-bold text-black'>Tổng quan user thợ</div>
@@ -211,23 +182,31 @@ function Users() {
           <Button variant='outlined' startIcon={<Filter color='#1976d2' />}>
             Bộ lọc
           </Button>
-          <Button
-            variant='contained'
-            startIcon={<AddIcon />}
-            className={'bg-[#3498db] hover:bg-[#2980b9]'}
-          >
-            Tạo mới
-          </Button>
+          <DrawerAdd>
+            <Button
+              variant='contained'
+              startIcon={<AddIcon />}
+              className={'bg-[#3498db] hover:bg-[#2980b9]'}
+            >
+              Tạo mới
+            </Button>
+          </DrawerAdd>
         </Box>
       </Box>
-      <div style={{ height: 400, width: '100%' }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          checkboxSelection
-          onRowSelectionModelChange={handleSelectionModelChange}
-          selectionModel={selectionModel}
-        />
+      <Table setMeta={setMeta} meta={meta} />
+      <div className='pagination my-[30px] flex justify-between items-center'>
+        <Button variant='outlined' startIcon={<DeleteIcon />} className='w-[100px]'>
+          Xóa
+        </Button>
+        <div className='flex gap-2'>
+          <Pagination
+            onChange={(event: React.ChangeEvent<unknown>, page: number) => {
+              setMeta({ ...meta, page })
+            }}
+            count={meta.totalPage}
+          />
+        </div>
+        <div className='w-[100px]'></div>
       </div>
     </Layout>
   )

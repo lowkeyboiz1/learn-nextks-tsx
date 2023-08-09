@@ -36,19 +36,6 @@ function SwitchMode() {
     setTheme(theme === 'dark' ? 'light' : 'dark')
   }
   return (
-    // <Switch
-    //   onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-    //   defaultSelected
-    //   size='lg'
-    //   color='secondary'
-    //   thumbIcon={({ isSelected, className }) =>
-    //     isSelected ? (
-    //       <SunIcon className={className} />
-    //     ) : (
-    //       <MoonIcon className={className} />
-    //     )
-    //   }
-    // ></Switch>
     <FormControlLabel
       control={<Switch checked={state.gilad} onChange={handleChange} name='gilad' />}
       label={`Mode: ${theme === 'dark' ? 'dark' : 'light'}`}

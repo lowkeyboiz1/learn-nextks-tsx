@@ -15,18 +15,40 @@ import { useRouter } from 'next/router'
 import { usePathname, useSearchParams } from 'next/navigation'
 
 function Driver({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(false)
-  const [open2, setOpen2] = useState(false)
-
   const router = useRouter()
 
-  const handleToggle = (menu: 'open' | 'open2') => {
-    if (menu === 'open') {
-      setOpen((prevOpen) => !prevOpen)
-    } else if (menu === 'open2') {
-      setOpen2((prevOpen) => !prevOpen)
-    }
-  }
+  const menus = [
+    { id: 'home', title: 'Home' },
+    { id: 'about', title: 'About' },
+    {
+      id: 'users',
+      title: 'users',
+      children: [
+        {
+          id: 'users',
+          title: 'Users',
+        },
+        {
+          id: 'user2',
+          title: 'User2',
+        },
+        {
+          id: 'user3',
+          title: 'User3',
+        },
+      ],
+    },
+    {
+      id: 'admin',
+      title: 'Admins',
+      children: [
+        {
+          id: 'admin',
+          title: 'Admin',
+        },
+      ],
+    },
+  ]
 
   type Anchor = 'top' | 'left' | 'bottom' | 'right'
   const [state, setState] = useState<Record<Anchor, boolean>>({
@@ -64,50 +86,86 @@ function Driver({ children }: { children: React.ReactNode }) {
           component='nav'
           aria-labelledby='nested-list-subheader'
         >
-          {/* Other menu items */}
-          <ListItemButton onClick={() => router.push('/')}>
-            <ListItemIcon>
-              <StarBorder />
-            </ListItemIcon>
-            <ListItemText primary='Home' />
-          </ListItemButton>
-
-          <ListItemButton onClick={() => handleToggle('open')}>
-            <ListItemIcon>
-              <StarBorder />
-            </ListItemIcon>
-            <ListItemText primary='Users' />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout='auto' unmountOnExit>
-            <List component='div' disablePadding>
-              <ListItemButton sx={{ pl: 4 }} onClick={() => router.push('/Users')}>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary='Users' />
-              </ListItemButton>
-            </List>
-          </Collapse>
-          <ListItemButton onClick={() => handleToggle('open2')}>
-            <ListItemIcon>
-              <StarBorder />
-            </ListItemIcon>
-            <ListItemText primary='Admin' />
-            {open2 ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open2} timeout='auto' unmountOnExit>
-            <List component='div' disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary='Admin' />
-              </ListItemButton>
-            </List>
-          </Collapse>
+          {menus.map((menu, index) => (
+            <RenderMenuItem menu={menu} key={index} state={state} setState={setState} />
+          ))}
         </List>
       </Drawer>
+    </>
+  )
+}
+
+const RenderChildrenMenu = ({
+  menu,
+  setState,
+  state,
+}: {
+  menu: any
+  setState: any
+  state: any
+}) => {
+  const router = useRouter()
+
+  return (
+    <ListItemButton
+      sx={{ pl: 4 }}
+      onClick={() => {
+        setState({ ...state, left: false })
+        router.push(`/${menu?.title}`)
+      }}
+    >
+      <ListItemIcon>
+        <StarBorder />
+      </ListItemIcon>
+      <ListItemText primary={menu?.title} />
+    </ListItemButton>
+  )
+}
+
+const RenderMenuItem = ({
+  menu,
+  setState,
+  state,
+}: {
+  menu: any
+  setState: any
+  state: any
+}) => {
+  const [showChildrenItem, setShowChildrenItem] = useState(false)
+  const router = useRouter()
+
+  return (
+    <>
+      <ListItemButton
+        onClick={() => {
+          if (!menu?.children?.length) {
+            router.push(`/${menu.title !== 'Home' ? menu?.title : ''}`)
+            setState({ ...state, left: false })
+          } else {
+            setShowChildrenItem(!showChildrenItem)
+          }
+        }}
+      >
+        <ListItemIcon>
+          <StarBorder />
+        </ListItemIcon>
+        <ListItemText primary={menu.title} />
+        {menu.children && (showChildrenItem ? <ExpandLess /> : <ExpandMore />)}
+      </ListItemButton>
+      {menu.children && (
+        <Collapse in={showChildrenItem} timeout='auto' unmountOnExit>
+          <List component='div' disablePadding>
+            {menu?.children.map((item: any, index: any) => (
+              <RenderChildrenMenu
+                key={index}
+                menu={item}
+                setState={setState}
+                state={state}
+              />
+            ))}
+          </List>
+        </Collapse>
+      )}
     </>
   )
 }
