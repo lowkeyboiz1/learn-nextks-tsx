@@ -11,6 +11,10 @@ interface IUser {
   last_name: string
   avatar: string
   status: any
+  birthday: any
+  homeTown: any
+  gender: any
+  phoneNumber: any
 }
 function Table({ setMeta, meta }: { setMeta: Function; meta: IMeta }) {
   const [tableData, setTableData] = useState([])
@@ -66,11 +70,17 @@ function Table({ setMeta, meta }: { setMeta: Function; meta: IMeta }) {
                 <input checked={isCheckedAll} type='checkbox' className='mr-6' />
                 {item.first_name + '' + item.last_name}
               </td>
-              <td className='w-[14%]'>Nam</td>
-              <td className='w-[14%]'>Ngày sinh</td>
-              <td className='w-[14%]'>Quê quán</td>
+              <td className='w-[14%]'>
+                {item?.gender ? (item?.gender === 'female' ? 'Nữ' : 'Nam') : 'Nam'}
+              </td>
+              <td className='w-[14%]'>
+                {item?.birthday ? item?.birthday : '12/31/2023'}
+              </td>
+              <td className='w-[14%]'>{item?.homeTown ? item?.homeTown : 'TPHCM'}</td>
               <td className='w-[14%]'>{item.email}</td>
-              <td className='w-[14%]'>0123456789</td>
+              <td className='w-[14%]'>
+                {item?.phoneNumber ? item?.phoneNumber : '0912345678'}
+              </td>
               <td className='w-[14%] text-right'>
                 <RenderStatus status={item.status === 'onl'} name={'a'} />
               </td>
