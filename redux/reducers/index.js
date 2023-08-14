@@ -1,6 +1,4 @@
 import { combineReducers } from 'redux'
-import UsersReducer from './UsersReducer'
+import UserInfoReducer from './UserInfoReducer'
 
-export default combineReducers({
-  UsersReducer,
-})
+export default combineReducers({ UserInfoReducer })

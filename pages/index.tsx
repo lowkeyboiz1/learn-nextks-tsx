@@ -1,8 +1,9 @@
-import Header from '@/components/Header'
 import Layout from '@/components/Layout'
-import SwitchMode from '@/components/SwitchMode/SwitchMode'
-import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import Login from './Login'
 
 export default function Home() {
-  return <Layout>khang</Layout>
+  const UserInfoState = useSelector((state: any) => state.UserInfoReducer)
+
+  return UserInfoState.isAuth ? <Layout>khang</Layout> : <Login />
 }

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import { Box, Button, InputAdornment, Pagination, TextField } from '@mui/material'
@@ -9,8 +9,10 @@ import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import AddIcon from '@mui/icons-material/Add'
 import { Filter } from 'iconsax-react'
-import Table from '@/components/Table'
+import Table, { callApiTabelData } from '@/components/Table'
 import DrawerAdd from '@/components/DrawerAdd'
+import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux'
 
 export interface IMeta {
   page: number
@@ -20,7 +22,11 @@ export interface IMeta {
 }
 
 function Users() {
-  const [searchValue, setSearchValue] = useState('')
+  const UserInfoState = useSelector((state: any) => state.UserInfoReducer)
+
+  const router = useRouter()
+
+  const [searchValue, setSearchValue] = useState(router.query.search || '')
   const [dataFromFormInput, setDataFromFormInput] = useState({})
   const [meta, setMeta] = useState<IMeta>({
     page: 1,
@@ -29,15 +35,80 @@ function Users() {
     dataForm: {},
   })
 
+  const [filter, setFilter] = useState({
+    gender: 'Nam',
+    homeTown: 'HCM',
+    status: 'Onl',
+  })
+
   const inputRef = useRef<HTMLInputElement | null>(null)
+
+  // let debounceQuery = useRef<any>(null)
+
+  const handleSearch = (e: any) => {
+    const value = e.target.value
+    setSearchValue(value)
+    // clearTimeout(debounceQuery.current)
+    // debounceQuery.current = setTimeout(() => {
+    //   // handleUrl
+    //   router.push({
+    //     pathname: router.pathname,
+    //     query: { ...router.query, search: e.target.value },
+    //   })
+    // }, 250)
+
+    if (value?.length <= 0) {
+      router.push({
+        pathname: router.pathname,
+        query: '',
+      })
+    } else {
+      router.push({
+        pathname: router.pathname,
+        query: { ...router.query, search: e.target.value },
+      })
+    }
+  }
+
+  const handleUrl = (value: any) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, search: value },
+    })
+  }
+  useEffect(() => {
+    // Update searchValue when query.search changes
+    const querySearch: any = router.query.search
+    setSearchValue(querySearch || '')
+  }, [router.query.search])
+
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      callApiTabelData(1, searchValue, meta, setMeta, filter)
+    }, 250)
+
+    return () => {
+      clearTimeout(debounceTimer)
+    }
+  }, [searchValue, filter])
+
+  // useEffect(() => {
+  // }, [filter])
 
   const clearSearchInput = () => {
     setSearchValue('')
+    handleUrl('')
     inputRef.current!.focus() // Using non-null assertion here
+
+    router.push({
+      pathname: router.pathname,
+      query: '',
+    })
   }
 
-  const openModalAdd = () => {}
-
+  useEffect(() => {
+    !UserInfoState.isAuth && router.push('/')
+  }, [UserInfoState])
   return (
     <Layout>
       <div className='text-[32px] font-bold text-black'>Tổng quan user thợ</div>
@@ -155,7 +226,7 @@ function Users() {
           type='text'
           size='small'
           value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+          onChange={(e) => handleSearch(e)}
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
@@ -168,7 +239,7 @@ function Users() {
                   fontSize='small'
                   sx={{
                     cursor: 'pointer',
-                    display: searchValue.length > 0 ? 'block' : 'none',
+                    display: searchValue?.length > 0 ? 'block' : 'none',
                   }}
                   onClick={clearSearchInput}
                 />
@@ -195,7 +266,13 @@ function Users() {
           </DrawerAdd>
         </Box>
       </Box>
-      <Table setMeta={setMeta} meta={meta} />
+      <Table
+        setMeta={setMeta}
+        meta={meta}
+        searchValue={searchValue}
+        filter={filter}
+        setFilter={setFilter}
+      />
       <div className='pagination my-[30px] flex justify-between items-center'>
         <Button variant='outlined' startIcon={<DeleteIcon />} className='w-[100px]'>
           Xóa
