@@ -13,6 +13,7 @@ import Table, { callApiTabelData } from '@/components/Table'
 import DrawerAdd from '@/components/DrawerAdd'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
+import { log } from 'console'
 
 export interface IMeta {
   page: number
@@ -107,7 +108,7 @@ function Users() {
   }
 
   useEffect(() => {
-    !UserInfoState.isAuth && router.push('/')
+    console.log(UserInfoState.isAuth)
   }, [UserInfoState])
   return (
     <Layout>

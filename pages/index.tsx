@@ -5,5 +5,7 @@ import Login from './Login'
 export default function Home() {
   const UserInfoState = useSelector((state: any) => state.UserInfoReducer)
 
-  return UserInfoState.isAuth ? <Layout>khang</Layout> : <Login />
+  // return UserInfoState.isAuth ? <Layout>khang</Layout> : <Login />
+
+  return <Layout>khang</Layout>
 }

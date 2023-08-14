@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Drawer from '@mui/material/Drawer'
-import Button from '@mui/material/Button'
 import List from '@mui/material/List'
 import InputText from '../InputText'
 import RadioGroup from '@mui/material/RadioGroup'
 import {
   Alert,
+  Button,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -141,14 +141,14 @@ function DrawerAdd({
 
   return (
     <>
-      <Button
+      <div
         onClick={() => {
           setState({ ...state, right: true })
           handleClear()
         }}
       >
         {children}
-      </Button>
+      </div>
       <Drawer
         anchor={'right'}
         open={state['right']}

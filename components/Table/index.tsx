@@ -1,3 +1,5 @@
+'use client'
+
 import { IMeta } from '@/pages/Users'
 import { FormControl, InputLabel, MenuItem, Select, Switch } from '@mui/material'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -140,33 +142,33 @@ function Table({
           </td>
           <td className='w-[14%] flex gap-3 items-center'>
             <div>Giới tính</div>
-            <ShortList
+            {/* <ShortList
               filter={filter}
               setFilter={setFilter}
               shortBy={['Nam', 'Nữ']}
               keyCat={'gender'}
-            />
+            /> */}
           </td>
           <td className='w-[14%]'>Ngày sinh</td>
           <td className='w-[14%] flex gap-3 items-center'>
             <div>Quê quán</div>
-            <ShortList
+            {/* <ShortList
               filter={filter}
               setFilter={setFilter}
               keyCat={'homeTown'}
               shortBy={['Nam', 'Nữ']}
-            />
+            /> */}
           </td>
           <td className='w-[14%]'>Email</td>
           <td className='w-[14%]'>Số điện thoại</td>
           <td className='w-[14%] text-right flex gap-3 items-center'>
             <div>Trạng thái</div>
-            <ShortList
+            {/* <ShortList
               filter={filter}
               keyCat={'status'}
               setFilter={setFilter}
               shortBy={['Onl', 'Off']}
-            />
+            /> */}
           </td>
         </tr>
       </thead>
@@ -274,7 +276,6 @@ const ShortList = ({
     const valueSelect = event.target.value
     setSelect('')
     setFilter({ ...filter, [keyCat]: valueSelect })
-    console.log(keyCat)
   }
 
   return (

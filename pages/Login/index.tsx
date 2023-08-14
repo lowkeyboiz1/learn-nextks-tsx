@@ -12,6 +12,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { UserInfo } from '@/redux/actions/UserInfo'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 function Login() {
   const [name, setName] = useState('')
@@ -47,6 +48,9 @@ function Login() {
       console.error('Error:', error)
     }
   }
+  const { locales, locale: activeLocale } = router
+
+  const otherLocales = locales?.filter((locale) => locale !== activeLocale)
   console.log(UserInfoState)
 
   return (
@@ -75,6 +79,20 @@ function Login() {
         >
           Sign in
         </button>
+        {/* <div className='bg-red-200 cursor-pointer'>{activeLocale}</div> */}
+        {/* {otherLocales?.map((locale, localIndex) => {
+          const { pathname, query } = router
+          return (
+            <Link
+              href={{ pathname, query }}
+              locale={locale}
+              key={localIndex}
+              className='bg-black text-white'
+            >
+              {locale}
+            </Link>
+          )
+        })} */}
       </div>
     </div>
   )
