@@ -11,8 +11,10 @@ import {
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { UserInfo } from '@/redux/actions/UserInfo'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { UseTranslation, useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 
 function Login() {
   const [name, setName] = useState('')
@@ -22,6 +24,10 @@ function Login() {
   const UserInfoState = useSelector((state: any) => state.UserInfoReducer)
 
   const router = useRouter()
+
+  const { locale } = router
+
+  const { t } = useTranslation('common')
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
@@ -51,12 +57,11 @@ function Login() {
   const { locales, locale: activeLocale } = router
 
   const otherLocales = locales?.filter((locale) => locale !== activeLocale)
-  console.log(UserInfoState)
 
   return (
     <div className='h-[100vh] bg-white'>
       <div className='max-w-[500px] rounded-md p-4 bg-white flex flex-col gap-4 relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-        <div className='text-black text-center text-[20px] mb-4'>Sign in</div>
+        <div className='text-black text-center text-[20px] mb-4'>{t('signIn')}</div>
         <TextField
           id='outlined-basic'
           label='User name'
@@ -79,8 +84,8 @@ function Login() {
         >
           Sign in
         </button>
-        {/* <div className='bg-red-200 cursor-pointer'>{activeLocale}</div> */}
-        {/* {otherLocales?.map((locale, localIndex) => {
+        <div className='bg-red-200 cursor-pointer'>{activeLocale}</div>
+        {otherLocales?.map((locale, localIndex) => {
           const { pathname, query } = router
           return (
             <Link
@@ -92,10 +97,18 @@ function Login() {
               {locale}
             </Link>
           )
-        })} */}
+        })}
       </div>
     </div>
   )
 }
 
 export default Login
+
+export async function getStaticProps({ locale }: { locale: any }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  }
+}

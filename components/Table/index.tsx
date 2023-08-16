@@ -131,7 +131,7 @@ function Table({
     <table className='w-full rounded-[12px] overflow-hidden'>
       <thead className='w-full bg-[#add4fa] text-[#0984e3]'>
         <tr className='table-titles flex items-center justify-between font-bold w-full px-6 py-2'>
-          <td className='w-[14%]'>
+          <th className='w-[14%]'>
             <input
               type='checkbox'
               className='mr-6'
@@ -139,42 +139,42 @@ function Table({
               onChange={() => handleCheckboxChange(meta.dataForm)}
             />
             Họ tên
-          </td>
-          <td className='w-[14%] flex gap-3 items-center'>
-            <div>Giới tính</div>
-            {/* <ShortList
+          </th>
+          <th className='w-[14%] flex gap-3 items-center'>
+            <span>Giới tính</span>
+            <ShortList
               filter={filter}
               setFilter={setFilter}
               shortBy={['Nam', 'Nữ']}
               keyCat={'gender'}
-            /> */}
-          </td>
-          <td className='w-[14%]'>Ngày sinh</td>
-          <td className='w-[14%] flex gap-3 items-center'>
-            <div>Quê quán</div>
-            {/* <ShortList
+            />
+          </th>
+          <th className='w-[14%]'>Ngày sinh</th>
+          <th className='w-[14%] flex gap-3 items-center'>
+            <span>Quê quán</span>
+            <ShortList
               filter={filter}
               setFilter={setFilter}
               keyCat={'homeTown'}
               shortBy={['Nam', 'Nữ']}
-            /> */}
-          </td>
-          <td className='w-[14%]'>Email</td>
-          <td className='w-[14%]'>Số điện thoại</td>
-          <td className='w-[14%] text-right flex gap-3 items-center'>
-            <div>Trạng thái</div>
-            {/* <ShortList
+            />
+          </th>
+          <th className='w-[14%]'>Email</th>
+          <th className='w-[14%]'>Số điện thoại</th>
+          <th className='w-[14%] text-right flex gap-3 items-center'>
+            <span>Trạng thái</span>
+            <ShortList
               filter={filter}
               keyCat={'status'}
               setFilter={setFilter}
               shortBy={['Onl', 'Off']}
-            /> */}
-          </td>
+            />
+          </th>
         </tr>
       </thead>
       <tbody className='w-full bg-[#ecf0f1]'>
-        {meta.dataForm?.length ? (
-          meta.dataForm.map((item: IUser) => (
+        {meta.dataForm?.length &&
+          meta?.dataForm?.map((item: IUser) => (
             <tr
               key={item.id}
               className='flex items-center justify-between px-6 py-2 text-[#34495e] w-full'
@@ -207,10 +207,7 @@ function Table({
                 />
               </td>
             </tr>
-          ))
-        ) : (
-          <>Skeleton</>
-        )}
+          ))}
       </tbody>
     </table>
   )
