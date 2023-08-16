@@ -15,6 +15,8 @@ import Link from 'next/link'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { UseTranslation, useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
+import { storeUserInfo } from '@/redux/reducers/UserInfoReducer'
+
 
 function Login() {
   const [name, setName] = useState('')
@@ -39,8 +41,18 @@ function Login() {
       })
 
       setCookie('token', result.token)
+      // dispatch(
+      //   UserInfo({
+      //     loading: false,
+      //     isAuth: true,
+      //     userInfo: {
+      //       name,
+      //       password,
+      //     },
+      //   }),
+      // )
       dispatch(
-        UserInfo({
+        storeUserInfo({
           loading: false,
           isAuth: true,
           userInfo: {

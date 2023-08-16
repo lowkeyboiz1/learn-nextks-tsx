@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
-
 import { Box, Button, InputAdornment, Pagination, TextField } from '@mui/material'
 import CardItem from '../../components/CardItem'
 import Layout from '../../components/Layout'
@@ -13,7 +12,6 @@ import Table, { callApiTabelData } from '@/components/Table'
 import DrawerAdd from '@/components/DrawerAdd'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
-import { log } from 'console'
 
 export interface IMeta {
   page: number
@@ -23,7 +21,6 @@ export interface IMeta {
 }
 
 function Users() {
-  const UserInfoState = useSelector((state: any) => state.UserInfoReducer)
 
   const router = useRouter()
 
@@ -33,7 +30,7 @@ function Users() {
     page: 1,
     totalPage: 1,
     total: 0,
-    dataForm: {},
+    dataForm: [],
   })
 
   const [filter, setFilter] = useState({
@@ -107,9 +104,6 @@ function Users() {
     })
   }
 
-  useEffect(() => {
-    console.log(UserInfoState.isAuth)
-  }, [UserInfoState])
   return (
     <Layout>
       <div className='text-[32px] font-bold text-black'>Tổng quan user thợ</div>
